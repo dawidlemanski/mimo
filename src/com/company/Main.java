@@ -54,18 +54,28 @@ public class Main
         Device mobile3 = new Device();
         Device mobile4 = new Device();
 
-        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2);
-        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2);
-        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2);
-        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2);
+        // 98% main, 2% side
+        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2, 0.98, 0.02);
+        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2, 0.98, 0.02);
+        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2, 0.98, 0.02);
+        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2, 0.98, 0.02);
+
+        // 90% main, 10% side
+        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2, 0.9, 0.1);
+        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2, 0.9, 0.1);
+        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2, 0.9, 0.1);
+        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2, 0.9, 0.1);
 
         writeSignals(mobile1,"mimo2x2\\mobile1.csv");
         writeSignals(mobile2,"mimo2x2\\mobile2.csv");
         writeSignals(mobile3,"mimo2x2\\mobile3.csv");
         writeSignals(mobile4,"mimo2x2\\mobile4.csv");
+
+
     }
 
-    public static void MIMO2x2(Device base_station, Device mobile, double d_mobile_multipath1, double d_mobile_multipath2)
+    public static void MIMO2x2(Device base_station, Device mobile, double d_mobile_multipath1, double d_mobile_multipath2,
+                               double powerProportion_main, double powerProportion_side)
     {
         Antenna tx1 = base_station.getAntennasList().get(0);
         Antenna tx2 = base_station.getAntennasList().get(1);
@@ -80,13 +90,13 @@ public class Main
         erceg1.setPathLoss(h_base_station, d_mobile_multipath1, h_mobile, frequency);
         erceg2.setPathLoss(h_base_station, d_mobile_multipath2, h_mobile, frequency);
 
-        Signal rx1s1 = new Signal(d_mobile_multipath1 / speed_wave, 0.98 * (tx1.getPower() - erceg1.getPathLoss()));
-        Signal rx1s2 = new Signal(d_mobile_multipath2 / speed_wave, 0.02 * (tx2.getPower() - erceg2.getPathLoss()));
+        Signal rx1s1 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_main * (tx1.getPower() - erceg1.getPathLoss()));
+        Signal rx1s2 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_side * (tx2.getPower() - erceg2.getPathLoss()));
         rx1.addSignal(rx1s1);
         rx1.addSignal(rx1s2);
 
-        Signal rx2s1 = new Signal(d_mobile_multipath1 / speed_wave, 0.02 * (tx1.getPower() - erceg1.getPathLoss()));
-        Signal rx2s2 = new Signal(d_mobile_multipath2 / speed_wave, 0.98 * (tx2.getPower() - erceg2.getPathLoss()));
+        Signal rx2s1 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_side * (tx1.getPower() - erceg1.getPathLoss()));
+        Signal rx2s2 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_main * (tx2.getPower() - erceg2.getPathLoss()));
         rx2.addSignal(rx2s1);
         rx2.addSignal(rx2s2);
 
@@ -96,13 +106,13 @@ public class Main
         cost231hata1.setPathLoss(h_base_station, d_mobile_multipath1, h_mobile, frequency);
         cost231hata2.setPathLoss(h_base_station, d_mobile_multipath2, h_mobile, frequency);
 
-        Signal rx1s3 = new Signal(d_mobile_multipath1 / speed_wave, 0.98 * (tx1.getPower() - cost231hata1.getPathLoss()));
-        Signal rx1s4 = new Signal(d_mobile_multipath2 / speed_wave, 0.02 * (tx2.getPower() - cost231hata2.getPathLoss()));
+        Signal rx1s3 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_main * (tx1.getPower() - cost231hata1.getPathLoss()));
+        Signal rx1s4 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_side * (tx2.getPower() - cost231hata2.getPathLoss()));
         rx1.addSignal(rx1s3);
         rx1.addSignal(rx1s4);
 
-        Signal rx2s3 = new Signal(d_mobile_multipath1 / speed_wave, 0.02 * (tx1.getPower() - cost231hata1.getPathLoss()));
-        Signal rx2s4 = new Signal(d_mobile_multipath2 / speed_wave, 0.98 * (tx2.getPower() - cost231hata2.getPathLoss()));
+        Signal rx2s3 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_side * (tx1.getPower() - cost231hata1.getPathLoss()));
+        Signal rx2s4 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_main * (tx2.getPower() - cost231hata2.getPathLoss()));
         rx2.addSignal(rx2s3);
         rx2.addSignal(rx2s4);
 
@@ -112,13 +122,13 @@ public class Main
         ericsson1.setPathLoss(h_base_station, d_mobile_multipath1, h_mobile, frequency);
         ericsson2.setPathLoss(h_base_station, d_mobile_multipath2, h_mobile, frequency);
 
-        Signal rx1s5 = new Signal(d_mobile_multipath1 / speed_wave, 0.98 * (tx1.getPower() - ericsson1.getPathLoss()));
-        Signal rx1s6 = new Signal(d_mobile_multipath2 / speed_wave, 0.02 * (tx2.getPower() - ericsson2.getPathLoss()));
+        Signal rx1s5 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_main * (tx1.getPower() - ericsson1.getPathLoss()));
+        Signal rx1s6 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_side * (tx2.getPower() - ericsson2.getPathLoss()));
         rx1.addSignal(rx1s5);
         rx1.addSignal(rx1s6);
 
-        Signal rx2s5 = new Signal(d_mobile_multipath1 / speed_wave, 0.02 * (tx1.getPower() - ericsson1.getPathLoss()));
-        Signal rx2s6 = new Signal(d_mobile_multipath2 / speed_wave, 0.98 * (tx2.getPower() - ericsson2.getPathLoss()));
+        Signal rx2s5 = new Signal(d_mobile_multipath1 / speed_wave, powerProportion_side * (tx1.getPower() - ericsson1.getPathLoss()));
+        Signal rx2s6 = new Signal(d_mobile_multipath2 / speed_wave, powerProportion_main * (tx2.getPower() - ericsson2.getPathLoss()));
         rx2.addSignal(rx2s5);
         rx2.addSignal(rx2s6);
     }
@@ -129,23 +139,15 @@ public class Main
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            Antenna rx1 = mobile.getAntennasList().get(0);
-            Antenna rx2 = mobile.getAntennasList().get(1);
-
-            out.println("Antenna 1");
-            for (int i = 0; i < rx1.getSignalList().size(); i++)
+            for (int i = 0; i < mobile.getAntennasList().size(); i++)
             {
-                out.printf("%.2f ", rx1.getSignalList().get(i).getTime() * Math.pow(10,6));  // mikro s
-                out.printf("%.2e%n", rx1.getSignalList().get(i).getPower());    //mW
-            }
-
-            out.println("Antenna 2");
-            for (int i = 0; i < rx2.getSignalList().size(); i++)
-            {
-                out.printf("%.2f ", rx2.getSignalList().get(i).getTime() * Math.pow(10,6));  // mikro s
-                out.printf("%.2e%n", rx2.getSignalList().get(i).getPower());    //mW
-//                out.print(rx2.getSignalList().get(i).getTime() * Math.pow(10,6) + " ");
-//                out.println(dbmToMw(rx2.getSignalList().get(i).getPower()));
+                Antenna rx1 = mobile.getAntennasList().get(i);
+                out.println("Antenna" + (i+1));
+                for (int j = 0; j < rx1.getSignalList().size(); j++)
+                {
+                    out.printf("%.2f ", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));  // mikro s
+                    out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    //mW
+                }
             }
         }
     }
