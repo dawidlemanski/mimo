@@ -1,7 +1,6 @@
 package com.company;
 
 import java.io.*;
-import java.util.Random;
 
 public class Main
 {
@@ -136,15 +135,17 @@ public class Main
             out.println("Antenna 1");
             for (int i = 0; i < rx1.getSignalList().size(); i++)
             {
-                out.print(rx1.getSignalList().get(i).getTime() * Math.pow(10,6) + " ");  // mikro s
-                out.println(dbmToMw(rx1.getSignalList().get(i).getPower()));    //mW
+                out.printf("%.2f ", rx1.getSignalList().get(i).getTime() * Math.pow(10,6));  // mikro s
+                out.printf("%.2e%n", rx1.getSignalList().get(i).getPower());    //mW
             }
 
             out.println("Antenna 2");
             for (int i = 0; i < rx2.getSignalList().size(); i++)
             {
-                out.print(rx2.getSignalList().get(i).getTime() * Math.pow(10,6) + " ");
-                out.println(dbmToMw(rx2.getSignalList().get(i).getPower()));
+                out.printf("%.2f ", rx2.getSignalList().get(i).getTime() * Math.pow(10,6));  // mikro s
+                out.printf("%.2e%n", rx2.getSignalList().get(i).getPower());    //mW
+//                out.print(rx2.getSignalList().get(i).getTime() * Math.pow(10,6) + " ");
+//                out.println(dbmToMw(rx2.getSignalList().get(i).getPower()));
             }
         }
     }
