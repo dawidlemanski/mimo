@@ -10,7 +10,7 @@ public interface PathLossModel
     {
         Random r = new Random();
         double s;
-        s = 8.2 + (10.6 - 8.2) * r.nextDouble();
+        s = 8.2 + (10.6 - 8.2) * r.nextGaussian();
 
         return s;
     }
