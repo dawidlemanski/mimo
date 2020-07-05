@@ -13,7 +13,6 @@ public class COST231Hata implements PathLossModel
     @Override
     public void setPathLoss(double h_b, double d, double h_m, double f)
     {
-        double path_loss = 0;
         double s = PathLossModel.randomShadowing();
         double a;
 

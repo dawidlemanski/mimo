@@ -13,34 +13,29 @@ public class Main
         return capacity;
     }
 
-    static double h_base_station = 70;          // m
-    static double frequency = 2000;             // MHz
-    static double power_base_station = 45;       // dBm
-    static double h_mobile = 5;                 // m
+    static double h_base_station = 70;  // m
+    static double frequency = 2000; // MHz
+    static double power_base_station = 45;  // dBm
+    static double h_mobile = 5; // m
     static double speed_wave = 2.997 * Math.pow(10,5); // km/s
+    static double d_mobile1 = 1.091;    //km
+    static double d_mobile2 = 1.377;    //km
+    static double d_mobile3 = 1.441;    //km
+    static double d_mobile4 = 1.623;    //km
+    static double d_mobile1_multipath1 = 0.001*(303+722+109);   //km
+    static double d_mobile1_multipath2 = 0.001*(613+642);   //km
+    static double d_mobile1_multipath3 = 0.001*(687+415);   //km
+    static double d_mobile2_multipath1 = 0.001*(301+577+147+373);   //km
+    static double d_mobile2_multipath2 = 0.001*(383+566+324+144);   //km
+    static double d_mobile2_multipath3 = 0.001*(824+323+301);   //km
+    static double d_mobile3_multipath1 = 0.001*(726+592+309);   //km
+    static double d_mobile3_multipath2 = 0.001*(542+728+187);   //km
+    static double d_mobile3_multipath3 = 0.001*(797+459+191);   //km
+    static double d_mobile4_multipath1 = 0.001*(1268+379);   //km
+    static double d_mobile4_multipath2 = 0.001*(614+669+362);   //km
+    static double d_mobile4_multipath3 = 0.001*(872+430+362);   //km
     public static void main(String[] args) throws IOException
     {
-        double d_mobile1 = 1.091;   //km
-        double d_mobile2 = 1.377;
-        double d_mobile3 = 1.441;
-        double d_mobile4 = 1.623;
-
-        double d_mobile1_multipath1 = 0.001*(303+722+109);  //km
-        double d_mobile1_multipath2 = 0.001*(613+642);
-        double d_mobile1_multipath3 = 0.001*(687+415);
-
-        double d_mobile2_multipath1 = 0.001*(301+577+147+373);
-        double d_mobile2_multipath2 = 0.001*(383+566+324+144);
-        double d_mobile2_multipath3 = 0.001*(824+323+301);
-
-        double d_mobile3_multipath1 = 0.001*(726+592+309);
-        double d_mobile3_multipath2 = 0.001*(542+728+187);
-        double d_mobile3_multipath3 = 0.001*(797+459+191);
-
-        double d_mobile4_multipath1 = 0.001*(1268+379);
-        double d_mobile4_multipath2 = 0.001*(614+669+362);
-        double d_mobile4_multipath3 = 0.001*(872+430+362);
-
         Device base_station = new Device();
         Antenna tx1 = new Antenna();
         Antenna tx2 = new Antenna();
@@ -70,8 +65,7 @@ public class Main
         writeSignals(mobile2,"mimo2x2\\mobile2.csv");
         writeSignals(mobile3,"mimo2x2\\mobile3.csv");
         writeSignals(mobile4,"mimo2x2\\mobile4.csv");
-
-
+        
     }
 
     public static void MIMO2x2(Device base_station, Device mobile, double d_mobile_multipath1, double d_mobile_multipath2,
@@ -145,8 +139,8 @@ public class Main
                 out.println("Antenna" + (i+1));
                 for (int j = 0; j < rx1.getSignalList().size(); j++)
                 {
-                    out.printf("%.2f ", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));  // mikro s
-                    out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    //mW
+                    out.printf("%.2f ", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));    // mikro s
+                    out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    //dBm
                 }
             }
         }
