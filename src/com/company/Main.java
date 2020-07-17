@@ -69,30 +69,30 @@ public class Main
         tx1.setPower(power_base_station / 2);
         tx2.setPower(power_base_station / 2);
         mobiles = Collections.singletonList(mobile1);
-        scenario3(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 2, "scenario1");
         mobiles = Collections.singletonList(mobile2);
-        scenario3(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 2, "scenario1");
         mobiles = Collections.singletonList(mobile3);
-        scenario3(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 2, "scenario1");
         mobiles = Collections.singletonList(mobile4);
-        scenario3(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 2, "scenario1");
 
         // scenariusz 2
         tx1.setPower(power_base_station / 4);
         tx2.setPower(power_base_station / 4);
         mobiles = Arrays.asList(mobile1, mobile2);
-        scenario3(mobiles, tx1, 4, "scenario2");
+        scenario(mobiles, tx1, 4, "scenario2");
         mobiles = Arrays.asList(mobile3, mobile4);
-        scenario3(mobiles, tx1, 4, "scenario2");
+        scenario(mobiles, tx1, 4, "scenario2");
 
         // scenariusz 3
         tx1.setPower(power_base_station / 8);
         tx2.setPower(power_base_station / 8);
         mobiles = Arrays.asList(mobile1, mobile2, mobile3, mobile4);
-        scenario3(mobiles, tx1, 8,"scenario3");
+        scenario(mobiles, tx1, 8,"scenario3");
     }
 
-    public static void scenario3(List<Device> mobiles, Antenna tx, double N, String scenario)
+    public static void scenario(List<Device> mobiles, Antenna tx, double N, String scenario)
     {
         List<Antenna> antennas = new ArrayList<>();
         List<Multipath> multipaths_scenario = new ArrayList<>();
