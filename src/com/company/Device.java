@@ -7,10 +7,18 @@ public class Device
 {
     List<Antenna> antennas = new ArrayList<>();
     double distance;
-    List<Double> multiPaths;
+    List<Multipath> multipaths = new ArrayList<>();
+    String name;
 
     public Device()
     {
+    }
+
+    public Device(String name, Multipath path1, Multipath path2)
+    {
+        this.name = name;
+        this.multipaths.add(path1);
+        this.multipaths.add(path2);
     }
 
     public Device(List<Antenna> Antennas)
@@ -33,4 +41,13 @@ public class Device
         this.antennas.add(antenna);
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public List<Multipath> getMultipaths()
+    {
+        return multipaths;
+    }
 }

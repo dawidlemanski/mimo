@@ -32,8 +32,22 @@ public class Antenna
         this.signalList = signalList;
     }
 
+    public void clearSignalList()
+    {
+        this.signalList = new ArrayList<>();
+    }
+
     public void addSignal(Signal signal)
     {
         this.signalList.add(signal);
     }
+
+    public double arrayFactor(double N, double angle)
+    {
+        if (angle > 180 || angle < 0) return 0;
+        double phi = Math.toRadians(angle);
+        return Math.abs(Math.sin(N * Math.PI * Math.cos(phi) / 2) / (N * Math.sin(Math.PI * Math.cos(phi) / 2)));
+    }
 }
+
+

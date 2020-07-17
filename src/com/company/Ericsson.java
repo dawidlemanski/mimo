@@ -3,6 +3,18 @@ package com.company;
 public class Ericsson implements PathLossModel
 {
     double pathLoss;
+    String name;
+
+    public Ericsson()
+    {
+        this.name = "Ericsson";
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.name;
+    }
 
     @Override
     public double getPathLoss()

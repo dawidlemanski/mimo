@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.*;
+import java.util.*;
 
 public class Main
 {
@@ -34,38 +35,129 @@ public class Main
     static double d_mobile4_multipath1 = 0.001*(1268+379);   //km
     static double d_mobile4_multipath2 = 0.001*(614+669+362);   //km
     static double d_mobile4_multipath3 = 0.001*(872+430+362);   //km
-    public static void main(String[] args) throws IOException
+    static List<Multipath> multipaths = Arrays.asList(new Multipath(760,0, d_mobile1_multipath1),
+        new Multipath(739,160, d_mobile1_multipath2),
+        new Multipath(539,533, d_mobile2_multipath1),
+        new Multipath(166,739, d_mobile2_multipath2),
+        new Multipath(-174,736, d_mobile3_multipath1),
+        new Multipath(-408,641, d_mobile3_multipath2),
+        new Multipath(-501,567, d_mobile4_multipath1),
+        new Multipath(-754,-14, d_mobile4_multipath2));
+
+    public static void main(String[] args)
     {
         Device base_station = new Device();
         Antenna tx1 = new Antenna();
         Antenna tx2 = new Antenna();
         base_station.addAntenna(tx1);
         base_station.addAntenna(tx2);
-        tx1.setPower(power_base_station/2);
-        tx2.setPower(power_base_station/2);
+        tx1.setPower(power_base_station / 2);
+        tx2.setPower(power_base_station / 2);
 
-        Device mobile1 = new Device();
-        Device mobile2 = new Device();
-        Device mobile3 = new Device();
-        Device mobile4 = new Device();
+        Device mobile1 = new Device("mobile1", multipaths.get(0), multipaths.get(1));
+        Device mobile2 = new Device("mobile2", multipaths.get(2), multipaths.get(3));
+        Device mobile3 = new Device("mobile3", multipaths.get(4), multipaths.get(5));
+        Device mobile4 = new Device("mobile4", multipaths.get(6), multipaths.get(7));
+        List<Device> mobiles;
 
-        // 98% main, 2% side
-        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2, 0.98, 0.02);
-        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2, 0.98, 0.02);
-        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2, 0.98, 0.02);
-        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2, 0.98, 0.02);
+        // scenariusz 1
+        // stary scenariusz: 98% main, 2% side
+//        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2, 0.98, 0.02);
+//        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2, 0.98, 0.02);
+//        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2, 0.98, 0.02);
+//        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2, 0.98, 0.02);
+        tx1.setPower(power_base_station / 2);
+        tx2.setPower(power_base_station / 2);
+        mobiles = Collections.singletonList(mobile1);
+        scenario3(mobiles, tx1, 2, "scenario1");
+        mobiles = Collections.singletonList(mobile2);
+        scenario3(mobiles, tx1, 2, "scenario1");
+        mobiles = Collections.singletonList(mobile3);
+        scenario3(mobiles, tx1, 2, "scenario1");
+        mobiles = Collections.singletonList(mobile4);
+        scenario3(mobiles, tx1, 2, "scenario1");
 
-        // 90% main, 10% side
-        MIMO2x2(base_station, mobile1, d_mobile1_multipath1, d_mobile1_multipath2, 0.9, 0.1);
-        MIMO2x2(base_station, mobile2, d_mobile2_multipath1, d_mobile2_multipath2, 0.9, 0.1);
-        MIMO2x2(base_station, mobile3, d_mobile3_multipath1, d_mobile3_multipath2, 0.9, 0.1);
-        MIMO2x2(base_station, mobile4, d_mobile4_multipath1, d_mobile4_multipath2, 0.9, 0.1);
+        // scenariusz 2
+        tx1.setPower(power_base_station / 4);
+        tx2.setPower(power_base_station / 4);
+        mobiles = Arrays.asList(mobile1, mobile2);
+        scenario3(mobiles, tx1, 4, "scenario2");
+        mobiles = Arrays.asList(mobile3, mobile4);
+        scenario3(mobiles, tx1, 4, "scenario2");
 
-        writeSignals(mobile1,"mimo2x2\\mobile1.csv");
-        writeSignals(mobile2,"mimo2x2\\mobile2.csv");
-        writeSignals(mobile3,"mimo2x2\\mobile3.csv");
-        writeSignals(mobile4,"mimo2x2\\mobile4.csv");
-        
+        // scenariusz 3
+        tx1.setPower(power_base_station / 8);
+        tx2.setPower(power_base_station / 8);
+        mobiles = Arrays.asList(mobile1, mobile2, mobile3, mobile4);
+        scenario3(mobiles, tx1, 8,"scenario3");
+    }
+
+    public static void scenario3(List<Device> mobiles, Antenna tx, double N, String scenario)
+    {
+        List<Antenna> antennas = new ArrayList<>();
+        List<Multipath> multipaths_scenario = new ArrayList<>();
+        for (int i = 0; i < mobiles.size(); i++)
+        {
+            for (int j = 0; j < 2; j++) // 2 anteny w każdym mobile
+            {
+                mobiles.get(i).addAntenna(new Antenna());
+                antennas.add(mobiles.get(i).getAntennasList().get(j));
+                multipaths_scenario.add(mobiles.get(i).getMultipaths().get(j));
+            }
+        }
+
+        List<PathLossModel> models = Arrays.asList(new Erceg(), new COST231Hata(), new Ericsson());
+        for (PathLossModel model : models)
+        {
+            for (int i = 0; i < antennas.size(); i++)
+            {
+                Antenna rx = antennas.get(i);
+
+                Iterator<Multipath> it = multipaths_scenario.listIterator(i);
+                Multipath temp = (Multipath) it.next();
+                double rotate_angle = temp.getAngle();
+                it = multipaths_scenario.listIterator(i); // iterator reset
+
+                for (int j = 0; j < antennas.size(); j++)
+                {
+                    if (!it.hasNext())
+                        it = multipaths_scenario.iterator();
+                    Multipath multipath = (Multipath) it.next();
+                    double newAngle = multipath.rotate(multipath.x, multipath.y, rotate_angle + 90);
+
+                    model.setPathLoss(h_base_station, multipath.getLength(), h_mobile, frequency);
+
+                    Signal sig = new Signal(multipath.getLength() / speed_wave, rx.arrayFactor(N, newAngle) * tx.getPower() - model.getPathLoss());
+//                    System.out.println("Antenna no " + (i + 1) + " multipath length: " + multipath.length + " arrayFactor: " + rx.arrayFactor(N, newAngle));
+//                if (sig.power != 0) rx.addSignal(sig);    // pomijamy sygnał gdy poza zasięgiem anteny?
+                    rx.addSignal(sig);
+                }
+            }
+            try
+            {
+                for (int i=0; i < mobiles.size(); i++)
+                {
+                    writeSignals(mobiles.get(i),scenario+"\\"+mobiles.get(i).getName()+model.getName()+".csv");
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            // reset sygnałów dla kolejnego modelu
+            for (int i=0; i < mobiles.size(); i++)
+            {
+                for (int j = 0; j < mobiles.get(i).getAntennasList().size(); j++)
+                {
+                    mobiles.get(i).getAntennasList().get(j).clearSignalList();
+                }
+            }
+        }
+        // reset anten dla kolejnego scenariusza
+        for (int i=0; i < mobiles.size(); i++)
+        {
+            mobiles.get(i).getAntennasList().clear();
+        }
     }
 
     public static void MIMO2x2(Device base_station, Device mobile, double d_mobile_multipath1, double d_mobile_multipath2,
@@ -139,7 +231,7 @@ public class Main
                 out.println("Antenna" + (i+1));
                 for (int j = 0; j < rx1.getSignalList().size(); j++)
                 {
-                    out.printf("%.2f ", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));    // mikro s
+                    out.printf("%.2f\t", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));    // mikro s
                     out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    //dBm
                 }
             }

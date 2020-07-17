@@ -3,6 +3,18 @@ package com.company;
 public class COST231Hata implements PathLossModel
 {
     double pathLoss;
+    String name;
+
+    public COST231Hata()
+    {
+        this.name = "COST231Hata";
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.name;
+    }
 
     @Override
     public double getPathLoss()

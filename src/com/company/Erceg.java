@@ -3,6 +3,18 @@ package com.company;
 public class Erceg implements PathLossModel
 {
     double pathLoss;
+    String name;
+
+    public Erceg()
+    {
+        this.name = "Erceg";
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.name;
+    }
 
     @Override
     public double getPathLoss()
