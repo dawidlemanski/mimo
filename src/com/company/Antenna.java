@@ -44,7 +44,7 @@ public class Antenna
 
     public double arrayFactor(double N, double angle)
     {
-        if (angle > 180 || angle < 0) return 0;
+//        if (angle > 180 || angle < 0) return 0;   // pomijamy sygnał gdy poza zasięgiem anteny?
         double phi = Math.toRadians(angle);
         return Math.abs(Math.sin(N * Math.PI * Math.cos(phi) / 2) / (N * Math.sin(Math.PI * Math.cos(phi) / 2)));
     }

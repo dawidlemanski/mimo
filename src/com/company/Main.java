@@ -69,21 +69,21 @@ public class Main
         tx1.setPower(power_base_station / 2);
         tx2.setPower(power_base_station / 2);
         mobiles = Collections.singletonList(mobile1);
-        scenario(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 8, "scenario1");
         mobiles = Collections.singletonList(mobile2);
-        scenario(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 8, "scenario1");
         mobiles = Collections.singletonList(mobile3);
-        scenario(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 8, "scenario1");
         mobiles = Collections.singletonList(mobile4);
-        scenario(mobiles, tx1, 2, "scenario1");
+        scenario(mobiles, tx1, 8, "scenario1");
 
         // scenariusz 2
         tx1.setPower(power_base_station / 4);
         tx2.setPower(power_base_station / 4);
         mobiles = Arrays.asList(mobile1, mobile2);
-        scenario(mobiles, tx1, 4, "scenario2");
+        scenario(mobiles, tx1, 8, "scenario2");
         mobiles = Arrays.asList(mobile3, mobile4);
-        scenario(mobiles, tx1, 4, "scenario2");
+        scenario(mobiles, tx1, 8, "scenario2");
 
         // scenariusz 3
         tx1.setPower(power_base_station / 8);
@@ -124,11 +124,13 @@ public class Main
                         it = multipaths_scenario.iterator();
                     Multipath multipath = (Multipath) it.next();
                     double newAngle = multipath.rotate(multipath.x, multipath.y, rotate_angle + 90);
+//                    double arrayFactor = 10 * Math.log10(Math.pow(rx.arrayFactor(N, newAngle),2)/2);
+                    double arrayFactor = rx.arrayFactor(N, newAngle);
 
                     model.setPathLoss(h_base_station, multipath.getLength(), h_mobile, frequency);
 
-                    Signal sig = new Signal(multipath.getLength() / speed_wave, rx.arrayFactor(N, newAngle) * tx.getPower() - model.getPathLoss());
-//                    System.out.println("Antenna no " + (i + 1) + " multipath length: " + multipath.length + " arrayFactor: " + rx.arrayFactor(N, newAngle));
+                    Signal sig = new Signal(multipath.getLength() / speed_wave, arrayFactor * tx.getPower() - model.getPathLoss());
+//                    System.out.println(scenario + " antenna no " + (i + 1) + " multipath length: " + multipath.length + " arrayFactor: " + arrayFactor);
 //                if (sig.power != 0) rx.addSignal(sig);    // pomijamy sygnał gdy poza zasięgiem anteny?
                     rx.addSignal(sig);
                 }
