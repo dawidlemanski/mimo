@@ -42,11 +42,24 @@ public class Antenna
         this.signalList.add(signal);
     }
 
-    public double arrayFactor(double N, double angle)
+//    wersja z 15_arrays2.pdf
+//    public double arrayFactor(double N, double theta, double alpha)
+//    {
+////        if (angle > 180 || angle < 0) return 999999;   // pomijamy sygnał gdy poza zasięgiem anteny?
+//        theta = Math.toRadians(theta);
+//        alpha= Math.toRadians(alpha);
+//        double gamma = Math.PI * Math.cos(theta) + alpha;
+//        return Math.abs(Math.sin(N * gamma / 2) / (N * Math.sin(gamma / 2)));
+//    }
+
+//    wersja z Phased Array Antenna Patterns—Part 1: Linear Array Beam Characteristics and Array Factor
+    public double arrayFactor(double N, double theta, double phi)
     {
-//        if (angle > 180 || angle < 0) return 0;   // pomijamy sygnał gdy poza zasięgiem anteny?
-        double phi = Math.toRadians(angle);
-        return Math.abs(Math.sin(N * Math.PI * Math.cos(phi) / 2) / (N * Math.sin(Math.PI * Math.cos(phi) / 2)));
+    //        if (angle > 180+90 || angle < -90) return 999999;   // pomijamy sygnał gdy poza zasięgiem anteny?
+        theta = Math.toRadians(theta);
+        phi = Math.toRadians(phi);
+        if (Math.sin(theta) - Math.sin(phi) == 0) return 0;
+        return Math.abs(Math.sin(N * (Math.PI / 2 * (Math.sin(theta) - Math.sin(phi)))) / (N * Math.sin(Math.PI / 2 * (Math.sin(theta) - Math.sin(phi)))));
     }
 }
 

@@ -40,6 +40,6 @@ public class Multipath
         double angle_rad = Math.toRadians(angle);
         double x_new = x * Math.cos(angle_rad) + y * Math.sin(angle_rad);
         double y_new = -x * Math.sin(angle_rad) + y * Math.cos(angle_rad);
-        return Math.toDegrees(Math.atan2(y_new, x_new))+180;
+        return Math.toDegrees(Math.atan2(y_new, x_new));
     }
 }

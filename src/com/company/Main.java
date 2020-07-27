@@ -115,7 +115,7 @@ public class Main
 
                 Iterator<Multipath> it = multipaths_scenario.listIterator(i);
                 Multipath temp = (Multipath) it.next();
-                double rotate_angle = temp.getAngle();
+                double rotateAngle = temp.getAngle();
                 it = multipaths_scenario.listIterator(i); // iterator reset
 
                 for (int j = 0; j < antennas.size(); j++)
@@ -123,14 +123,14 @@ public class Main
                     if (!it.hasNext())
                         it = multipaths_scenario.iterator();
                     Multipath multipath = (Multipath) it.next();
-                    double newAngle = multipath.rotate(multipath.x, multipath.y, rotate_angle + 90);
-//                    double arrayFactor = 10 * Math.log10(Math.pow(rx.arrayFactor(N, newAngle),2)/2);
-                    double arrayFactor = rx.arrayFactor(N, newAngle);
+                    double newAngle = multipath.rotate(multipath.x, multipath.y, rotateAngle);
+                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - rotateAngle, 90 - newAngle - rotateAngle));
 
                     model.setPathLoss(h_base_station, multipath.getLength(), h_mobile, frequency);
 
-                    Signal sig = new Signal(multipath.getLength() / speed_wave, arrayFactor * tx.getPower() - model.getPathLoss());
-//                    System.out.println(scenario + " antenna no " + (i + 1) + " multipath length: " + multipath.length + " arrayFactor: " + arrayFactor);
+                    Signal sig = new Signal(multipath.getLength() / speed_wave,  tx.getPower() + arrayFactor - model.getPathLoss());
+                    System.out.println(scenario + " antenna no " + (i + 1) + " multipath length: " + multipath.length
+                            + " newAngle " + (90 - newAngle - rotateAngle) + " rotate_angle " + (90 - rotateAngle) + " arrayFactor: " + arrayFactor);
 //                if (sig.power != 0) rx.addSignal(sig);    // pomijamy sygnał gdy poza zasięgiem anteny?
                     rx.addSignal(sig);
                 }
@@ -242,6 +242,7 @@ public class Main
 
     public static double mwToDbm(double mW)
     {
+        if (mW == 0) return 0;
         return 10 * Math.log10(mW / 1);
     }
 
