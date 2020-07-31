@@ -1,4 +1,4 @@
-package com.company;
+package com.lemanski_musztyfaga;
 
 public class COST231Hata implements PathLossModel
 {

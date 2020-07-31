@@ -1,4 +1,4 @@
-package com.company;
+package com.lemanski_musztyfaga;
 
 public class Erceg implements PathLossModel
 {
@@ -32,7 +32,6 @@ public class Erceg implements PathLossModel
         double a = 4.6, b = 0.0075, c = 12.6;   // typ A
 //        double a = 4, b = 0.0065, c = 17.1; // typ B
 //        double a = 3.6, b = 0.005, c = 20;   // typ C
-//        double s = 8.2;
         double s = PathLossModel.randomShadowing();
 
         gamma = a - b * h_b + c / h_b;
