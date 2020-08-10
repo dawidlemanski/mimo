@@ -145,7 +145,7 @@ public class Main
 
     public static void writeSignals(Device mobile, String fileName) throws IOException
     {
-        try(FileWriter fw = new FileWriter("src/com/company/out/" + fileName);
+        try(FileWriter fw = new FileWriter("src/com/lemanski_musztyfaga/out/" + fileName);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
