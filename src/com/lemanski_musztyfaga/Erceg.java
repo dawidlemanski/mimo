@@ -32,7 +32,7 @@ public class Erceg implements PathLossModel
         double a = 4.6, b = 0.0075, c = 12.6;   // typ A
 //        double a = 4, b = 0.0065, c = 17.1; // typ B
 //        double a = 3.6, b = 0.005, c = 20;   // typ C
-        double s = PathLossModel.randomShadowing();
+        double S = PathLossModel.randomShadowing();
 
         gamma = a - b * h_b + c / h_b;
         if (f > 2000)
@@ -43,6 +43,6 @@ public class Erceg implements PathLossModel
 
         this.pathLoss = 20 * Math.log10(4 * Math.PI * d0 / gamma)
                 + 10 * gamma * Math.log10(d / d0)
-                + s + L_f + L_m;
+                + S + L_f + L_m;
     }
 }

@@ -7,13 +7,9 @@ public class Main
 {
     static double h_base_station = 70;  // m
     static double frequency = 2000; // MHz
-    static double power_base_station = 45;  // dBm
+    static double power_base_station = 45+18-2;  // dBm
     static double h_mobile = 5; // m
     static double speed_wave = 2.997 * Math.pow(10,5); // km/s
-    static double d_mobile1 = 1.091;    //km
-    static double d_mobile2 = 1.377;    //km
-    static double d_mobile3 = 1.441;    //km
-    static double d_mobile4 = 1.623;    //km
     static double d_mobile1_multipath1 = 0.001*(303+722+109);   //km
     static double d_mobile1_multipath2 = 0.001*(613+642);   //km
     static double d_mobile2_multipath1 = 0.001*(301+577+147+373);   //km
@@ -38,8 +34,6 @@ public class Main
         Antenna tx2 = new Antenna();
         base_station.addAntenna(tx1);
         base_station.addAntenna(tx2);
-        tx1.setPower(power_base_station / 2);
-        tx2.setPower(power_base_station / 2);
 
         Device mobile1 = new Device("mobile1", multipaths.get(0), multipaths.get(1));
         Device mobile2 = new Device("mobile2", multipaths.get(2), multipaths.get(3));
@@ -48,8 +42,8 @@ public class Main
         List<Device> mobiles;
 
         // scenariusz 1
-        tx1.setPower(power_base_station / 2);
-        tx2.setPower(power_base_station / 2);
+        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/2));
+        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/2));
         mobiles = Collections.singletonList(mobile1);
         scenario(mobiles, tx1, 8, "scenario1");
         mobiles = Collections.singletonList(mobile2);
@@ -60,16 +54,16 @@ public class Main
         scenario(mobiles, tx1, 8, "scenario1");
 
         // scenariusz 2
-        tx1.setPower(power_base_station / 4);
-        tx2.setPower(power_base_station / 4);
+        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/4));
+        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/4));
         mobiles = Arrays.asList(mobile1, mobile2);
         scenario(mobiles, tx1, 8, "scenario2");
         mobiles = Arrays.asList(mobile3, mobile4);
         scenario(mobiles, tx1, 8, "scenario2");
 
         // scenariusz 3
-        tx1.setPower(power_base_station / 8);
-        tx2.setPower(power_base_station / 8);
+        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/8));
+        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/8));
         mobiles = Arrays.asList(mobile1, mobile2, mobile3, mobile4);
         scenario(mobiles, tx1, 8,"scenario3");
     }
@@ -166,5 +160,10 @@ public class Main
     {
         if (mW == 0) return 0;
         return 10 * Math.log10(mW / 1);
+    }
+
+    public static double dbmToMw(double dBm)
+    {
+        return Math.pow(10, dBm / 10);
     }
 }

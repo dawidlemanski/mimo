@@ -10,9 +10,9 @@ public interface PathLossModel
     static double randomShadowing()
     {
         Random r = new Random();
-        double s;
-        s = 8.2 + (10.6 - 8.2) * r.nextGaussian();
+        double S;
+        S = 8.2 + (10.6 - 8.2) * r.nextGaussian();
 
-        return s;
+        return S;
     }
 }
