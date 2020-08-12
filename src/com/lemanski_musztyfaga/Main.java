@@ -7,7 +7,9 @@ public class Main
 {
     static double h_base_station = 70;  // m
     static double frequency = 2000; // MHz
-    static double power_base_station = 45+18-2;  // dBm
+    static double base_station_power = 45;  // dBm
+    static double base_station_antenna_gain = 18;  // dBm
+    static double base_station_cable_loss = 2;  // dBm
     static double h_mobile = 5; // m
     static double speed_wave = 2.997 * Math.pow(10,5); // km/s
     static double d_mobile1_multipath1 = 0.001*(303+722+109);   //km
@@ -30,10 +32,8 @@ public class Main
     public static void main(String[] args)
     {
         Device base_station = new Device();
-        Antenna tx1 = new Antenna();
-        Antenna tx2 = new Antenna();
-        base_station.addAntenna(tx1);
-        base_station.addAntenna(tx2);
+        Antenna tx = new Antenna();
+        base_station.addAntenna(tx);
 
         Device mobile1 = new Device("mobile1", multipaths.get(0), multipaths.get(1));
         Device mobile2 = new Device("mobile2", multipaths.get(2), multipaths.get(3));
@@ -42,30 +42,27 @@ public class Main
         List<Device> mobiles;
 
         // scenariusz 1
-        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/2));
-        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/2));
+        tx.setPower(mwToDbm(dbmToMw(base_station_power)/2)+base_station_antenna_gain-base_station_cable_loss);
         mobiles = Collections.singletonList(mobile1);
-        scenario(mobiles, tx1, 8, "scenario1");
+        scenario(mobiles, tx, 8, "scenario1");
         mobiles = Collections.singletonList(mobile2);
-        scenario(mobiles, tx1, 8, "scenario1");
+        scenario(mobiles, tx, 8, "scenario1");
         mobiles = Collections.singletonList(mobile3);
-        scenario(mobiles, tx1, 8, "scenario1");
+        scenario(mobiles, tx, 8, "scenario1");
         mobiles = Collections.singletonList(mobile4);
-        scenario(mobiles, tx1, 8, "scenario1");
+        scenario(mobiles, tx, 8, "scenario1");
 
         // scenariusz 2
-        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/4));
-        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/4));
+        tx.setPower(mwToDbm(dbmToMw(base_station_power)/4) + base_station_antenna_gain - base_station_cable_loss);
         mobiles = Arrays.asList(mobile1, mobile2);
-        scenario(mobiles, tx1, 8, "scenario2");
+        scenario(mobiles, tx, 8, "scenario2");
         mobiles = Arrays.asList(mobile3, mobile4);
-        scenario(mobiles, tx1, 8, "scenario2");
+        scenario(mobiles, tx, 8, "scenario2");
 
         // scenariusz 3
-        tx1.setPower(mwToDbm(dbmToMw(power_base_station)/8));
-        tx2.setPower(mwToDbm(dbmToMw(power_base_station)/8));
+        tx.setPower(mwToDbm(dbmToMw(base_station_power)/8) + base_station_antenna_gain - base_station_cable_loss);
         mobiles = Arrays.asList(mobile1, mobile2, mobile3, mobile4);
-        scenario(mobiles, tx1, 8,"scenario3");
+        scenario(mobiles, tx, 8,"scenario3");
     }
 
     public static void scenario(List<Device> mobiles, Antenna tx, double N, String scenario)
@@ -100,8 +97,8 @@ public class Main
                         it = multipaths_scenario.iterator();
                     Multipath multipath = (Multipath) it.next();
                     double newAngle = multipath.rotate(multipath.x, multipath.y, rotateAngle);
-                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - rotateAngle, 90 - newAngle - rotateAngle));
-
+//                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - rotateAngle, 90 - newAngle - rotateAngle));
+                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - newAngle - rotateAngle, 90 - rotateAngle));
                     model.setPathLoss(h_base_station, multipath.getLength(), h_mobile, frequency);
 
                     Signal sig = new Signal(multipath.getLength() / speed_wave,  tx.getPower() + arrayFactor - model.getPathLoss());
