@@ -42,7 +42,7 @@ public class Main
         List<Device> mobiles;
 
         // scenariusz 1
-        tx.setPower(mwToDbm(dbmToMw(base_station_power)/2)+base_station_antenna_gain-base_station_cable_loss);
+        tx.setPower(mwToDbm(dbmToMw(base_station_power)/2) + base_station_antenna_gain - base_station_cable_loss);
         mobiles = Collections.singletonList(mobile1);
         scenario(mobiles, tx, 8, "scenario1");
         mobiles = Collections.singletonList(mobile2);
@@ -79,7 +79,7 @@ public class Main
             }
         }
 
-        List<PathLossModel> models = Arrays.asList(new Erceg(), new COST231Hata(), new Ericsson());
+        List<PathLossModel> models = Arrays.asList(new Hata(), new COST231Hata(), new Ericsson());
         for (PathLossModel model : models)
         {
             for (int i = 0; i < antennas.size(); i++)
