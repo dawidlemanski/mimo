@@ -6,7 +6,7 @@ import java.util.*;
 public class Main
 {
     static double h_base_station = 70;  // m
-    static double frequency = 2000; // MHz
+    static double frequency = 1500; // MHz
     static double base_station_power = 45;  // dBm
     static double base_station_antenna_gain = 18;  // dBm
     static double base_station_cable_loss = 2;  // dBm
@@ -103,7 +103,7 @@ public class Main
 
                     Signal sig = new Signal(multipath.getLength() / speed_wave,  tx.getPower() + arrayFactor - model.getPathLoss());
                     System.out.println(scenario + " antena: " + (i + 1) + " długość: " + multipath.length
-                            + " nachylenie wiązki: " + (90 - rotateAngle) + " kąt obserwacji " + (90 - newAngle - rotateAngle) + " współczynnik: " + arrayFactor);
+                            + " nachylenie wiązki: " + (90 - rotateAngle) + " kąt obserwacji " + (90 - newAngle - rotateAngle) + " współczynnik: " + arrayFactor + " model " + model.getName() + " " + model.getPathLoss());
                     rx.addSignal(sig);
                 }
             }
