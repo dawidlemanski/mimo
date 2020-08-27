@@ -6,7 +6,6 @@ import java.util.List;
 public class Device
 {
     List<Antenna> antennas = new ArrayList<>();
-    double distance;
     List<Multipath> multipaths = new ArrayList<>();
     String name;
 

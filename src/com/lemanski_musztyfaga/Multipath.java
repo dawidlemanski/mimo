@@ -35,11 +35,11 @@ public class Multipath
         return length;
     }
 
-    public double rotate(double x, double y, double angle)
+    public double rotate(double angle)
     {
         double angle_rad = Math.toRadians(angle);
-        double x_new = x * Math.cos(angle_rad) + y * Math.sin(angle_rad);
-        double y_new = -x * Math.sin(angle_rad) + y * Math.cos(angle_rad);
+        double x_new = this.x * Math.cos(angle_rad) + this.y * Math.sin(angle_rad);
+        double y_new = -this.x * Math.sin(angle_rad) + this.y * Math.cos(angle_rad);
         return Math.toDegrees(Math.atan2(y_new, x_new));
     }
 }

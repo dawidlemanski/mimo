@@ -42,13 +42,13 @@ public class Antenna
         this.signalList.add(signal);
     }
 
-//    wersja z Phased Array Antenna Patterns—Part 1: Linear Array Beam Characteristics and Array Factor
     public double arrayFactor(double N, double theta, double theta0)
     {
         theta = Math.toRadians(theta);
         theta0 = Math.toRadians(theta0);
         if (Math.sin(theta) - Math.sin(theta0) == 0) return 0;
-        return Math.abs(Math.sin(N * Math.PI / 2 * (Math.sin(theta) - Math.sin(theta0))) / (N * Math.sin(Math.PI / 2 * (Math.sin(theta) - Math.sin(theta0)))));
+        return Math.abs(Math.sin(N * Math.PI / 2 * (Math.sin(theta) - Math.sin(theta0)))
+                / (N * Math.sin(Math.PI / 2 * (Math.sin(theta) - Math.sin(theta0)))));
     }
 }
 

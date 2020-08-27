@@ -71,7 +71,7 @@ public class Main
         List<Multipath> multipaths_scenario = new ArrayList<>();
         for (int i = 0; i < mobiles.size(); i++)
         {
-            for (int j = 0; j < 2; j++) // 2 anteny w każdym mobile
+            for (int j = 0; j < 2; j++)
             {
                 mobiles.get(i).addAntenna(new Antenna());
                 antennas.add(mobiles.get(i).getAntennasList().get(j));
@@ -89,21 +89,20 @@ public class Main
                 Iterator<Multipath> it = multipaths_scenario.listIterator(i);
                 Multipath temp = (Multipath) it.next();
                 double rotateAngle = temp.getAngle();
-                it = multipaths_scenario.listIterator(i); // iterator reset
+                it = multipaths_scenario.listIterator(i);
 
                 for (int j = 0; j < antennas.size(); j++)
                 {
                     if (!it.hasNext())
                         it = multipaths_scenario.iterator();
                     Multipath multipath = (Multipath) it.next();
-                    double newAngle = multipath.rotate(multipath.x, multipath.y, rotateAngle);
-//                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - rotateAngle, 90 - newAngle - rotateAngle));
-                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - newAngle - rotateAngle, 90 - rotateAngle));
+                    double newAngle = multipath.rotate(rotateAngle);
+                    double arrayFactor = mwToDbm(rx.arrayFactor(N, 90 - newAngle - rotateAngle,
+                            90 - rotateAngle));
                     model.setPathLoss(h_base_station, multipath.getLength(), h_mobile, frequency);
 
-                    Signal sig = new Signal(multipath.getLength() / speed_wave,  tx.getPower() + arrayFactor - model.getPathLoss());
-                    System.out.println(scenario + " antena: " + (i + 1) + " długość: " + multipath.length
-                            + " nachylenie wiązki: " + (90 - rotateAngle) + " kąt obserwacji " + (90 - newAngle - rotateAngle) + " współczynnik: " + arrayFactor + " model " + model.getName() + " " + model.getPathLoss());
+                    Signal sig = new Signal(multipath.getLength() / speed_wave,
+                            tx.getPower() + arrayFactor - model.getPathLoss());
                     rx.addSignal(sig);
                 }
             }
@@ -118,7 +117,6 @@ public class Main
             {
                 e.printStackTrace();
             }
-            // reset sygnałów dla kolejnego modelu
             for (int i=0; i < mobiles.size(); i++)
             {
                 for (int j = 0; j < mobiles.get(i).getAntennasList().size(); j++)
@@ -127,7 +125,6 @@ public class Main
                 }
             }
         }
-        // reset anten dla kolejnego scenariusza
         for (int i=0; i < mobiles.size(); i++)
         {
             mobiles.get(i).getAntennasList().clear();
@@ -146,8 +143,8 @@ public class Main
                 out.println("Antenna" + (i+1));
                 for (int j = 0; j < rx1.getSignalList().size(); j++)
                 {
-                    out.printf("%.2f\t", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));    // mikro s
-                    out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    //dBm
+                    out.printf("%.2f\t", rx1.getSignalList().get(j).getTime() * Math.pow(10, 6));   // mikro s
+                    out.printf("%.2f%n", rx1.getSignalList().get(j).getPower());    // dBm
                 }
             }
         }

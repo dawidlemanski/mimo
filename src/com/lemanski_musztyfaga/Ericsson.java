@@ -25,8 +25,7 @@ public class Ericsson implements PathLossModel
     @Override
     public void setPathLoss(double h_b, double d, double h_m, double f)
     {
-        double a0 = 36.2, a1 = 30.2, a2 = 12.0, a3 = 0.1;  // teren miejski
-//        double a0 = 43.20, a1 = 43.2, a2 = 45.95, a3 = 0.1;  // teren podmiejski
+        double a0 = 36.2, a1 = 30.2, a2 = 12.0, a3 = 0.1;
         double g;
         double a = 0;
 
